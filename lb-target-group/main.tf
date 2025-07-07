@@ -27,5 +27,5 @@ resource "aws_lb_target_group" "lb_target_group" {
 resource "aws_lb_target_group_attachment" "lb_target_group_attachment" {
   target_group_arn = aws_lb_target_group.lb_target_group.arn
   target_id        = var.ec2_instance_id
-  port             = 8080
+  port             = 80
 }
