@@ -5,18 +5,18 @@ variable "public_key" {}
 variable "subnet_id" {}
 variable "sg_for_jenkins" {}
 variable "enable_public_ip_address" {}
-variable "user_data_install_jenkins" {}
+variable "user_data_install" {}
 
 
-output "jenkins_ec2_instance_ip" {
-  value = aws_instance.jenkins_ec2_instance_ip.id
+output "ec2_instance_id" {
+  value = aws_instance.ec2_instance.id
 }
 
-output "dev_proj_1_ec2_instance_public_ip" {
-  value = aws_instance.jenkins_ec2_instance_ip.public_ip
+output "ec2_instance_public_ip" {
+  value = aws_instance.ec2_instance.public_ip
 }
 
-resource "aws_instance" "jenkins_ec2_instance_ip" {
+resource "aws_instance" "ec2_instance" {
   ami           = var.ec2_ami_id
   instance_type = var.instance_type
   tags = {
@@ -27,7 +27,7 @@ resource "aws_instance" "jenkins_ec2_instance_ip" {
   vpc_security_group_ids      = var.sg_for_jenkins
   associate_public_ip_address = var.enable_public_ip_address
 
-  user_data = var.user_data_install_jenkins
+  user_data = var.user_data_install
 
   metadata_options {
     http_endpoint = "enabled"  # Enable the IMDSv2 endpoint
