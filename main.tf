@@ -41,9 +41,8 @@ module "alb" {
   lb_type                   = "application"
   sg_enable_ssh_https       = module.security_group.sg_ec2_sg_ssh_http_id
   subnet_ids                = tolist(module.networking.public_subnets)
-  tag_name                  = "dev-proj-1-alb"
+  tag_name                  = "alb"
   lb_target_group_arn       = module.lb_target_group.lb_target_group_arn
-  ec2_instance_id           = module.compute.ec2_instance_public_ip
   lb_listner_port           = 80
   lb_listner_protocol       = "HTTP"
   lb_listner_default_action = "forward"
