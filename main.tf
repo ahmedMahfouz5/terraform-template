@@ -28,8 +28,27 @@ module "compute" {
 module "lb_target_group" {
   source                   = "./lb-target-group"
   lb_target_group_name     = "lb-target-group"
-  lb_target_group_port     = 8080
+  lb_target_group_port     = 80
   lb_target_group_protocol = "HTTP"
   vpc_id                   = module.networking.vpc_id
   ec2_instance_id          = module.compute.ec2_instance_id
+}
+
+module "alb" {
+  source                    = "./load-balancer"
+  lb_name                   = "alb"
+  is_external               = false
+  lb_type                   = "application"
+  sg_enable_ssh_https       = module.security_group.sg_ec2_sg_ssh_http_id
+  subnet_ids                = tolist(module.networking.public_subnets)
+  tag_name                  = "dev-proj-1-alb"
+  lb_target_group_arn       = module.lb_target_group.lb_target_group_arn
+  ec2_instance_id           = module.compute.ec2_instance_public_ip
+  lb_listner_port           = 80
+  lb_listner_protocol       = "HTTP"
+  lb_listner_default_action = "forward"
+  lb_https_listner_port     = 80
+  lb_https_listner_protocol = "HTTP"
+  #dev_proj_1_acm_arn        = module.aws_ceritification_manager.dev_proj_1_acm_arn
+  lb_target_group_attachment_port = 80
 }
