@@ -24,3 +24,12 @@ module "compute" {
   enable_public_ip_address  = true
   user_data_install = templatefile("./template/template.sh", {})
 }
+
+module "lb_target_group" {
+  source                   = "./lb-target-group"
+  lb_target_group_name     = "lb-target-group"
+  lb_target_group_port     = 8080
+  lb_target_group_protocol = "HTTP"
+  vpc_id                   = module.networking.vpc_id
+  ec2_instance_id          = module.compute.ec2_instance_id
+}
