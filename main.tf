@@ -12,3 +12,15 @@ module "security_group" {
   vpc_id              = module.networking.vpc_id
   ec2_jenkins_sg_name = "Allow port 8080 for jenkins"
 }
+
+module "compute" {
+  source                    = "./compute"
+  ami_id                    = var.ec2_ami_id
+  instance_type             = "t2.medium"
+  tag_name                  = "Ubuntu Linux EC2"
+  public_key                = var.public_key
+  subnet_id                 = tolist(module.networking.public_subnets)[0]
+  sg_for_jenkins            = [module.security_group.sg_ec2_sg_ssh_http_id, module.security_group.sg_ec2_jenkins_port_8080]
+  enable_public_ip_address  = true
+  user_data_install_jenkins = templatefile("./template/template.sh", {})
+}
